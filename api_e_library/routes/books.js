@@ -2,7 +2,7 @@ var express = require("express");
 const { head } = require("../app");
 var router = express.Router();
 var mysql = require("mysql");
-
+var cors = require("cors");
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -10,9 +10,25 @@ var con = mysql.createConnection({
   database: "library",
 });
 
-/* GET users listing. */
-// localhost:3000/books
+// const headers = {
+//   "Access-Control-Allow-Origin": "*",
+//   "Access-Control-Allow-Methods": "OPTIONS, POST, GET,PUT",
+//   "Access-Control-Max-Age": 2592000, // 30 days
+//   "Access-Control-Allow-Headers": "* ", // 30 days
+// };
+
 router.get("/", function (req, res, next) {
+  con.connect(function (err) {
+    con.query("SELECT * FROM books", function (err, result, fields) {
+      console.log(result);
+      res.writeHead(200, Headers);
+      res.write(JSON.stringify(result));
+      return res.end();
+    });
+  });
+});
+router.post("/edit", function (req, res, next) {
+  console.log(req.body);
   con.connect(function (err) {
     con.query("SELECT * FROM books", function (err, result, fields) {
       console.log(result);
@@ -22,19 +38,6 @@ router.get("/", function (req, res, next) {
     });
   });
 });
-
-// // localhost:3000/books/add
-// router.post("/add", function (req, res, next) {
-//   res.send("respond with a addbook");
-// });
-// // localhost:3000/books/edit
-// router.put("/edit", function (req, res, next) {
-//   res.send("respond with a editbook");
-// });
-// // localhost:3000/books/delete
-// router.delete("/delete", function (req, res, next) {
-//   res.send("respond with a deletebook");
-// });
 
 router.get("/view/:id", function (req, res, next) {
   console.log(req.params.id);
